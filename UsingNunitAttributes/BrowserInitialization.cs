@@ -19,7 +19,6 @@ namespace UsingNunitAttributes
             if (!Enum.TryParse(browser, out BrowserType browserType))
             {
                 throw new Exception("Browser is not valid");
-
             }
 
             var baseBrowser = new BaseBrowser();

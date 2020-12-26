@@ -1,15 +1,14 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using System.Threading;
-
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace UsingNunitAttributes
 {
-
     [TestFixture]
     public class TestingWebPage : BrowserInitialization
     {
-
         [SetUp]
         public void Setup()
         {
@@ -17,25 +16,37 @@ namespace UsingNunitAttributes
         }
 
         [Test]
-        public void Test1()
+        public void GoToGoogle_EnterText_ClickFirstLink()
         {
-            var closePopUp = Driver.FindElement(By.XPath("//button[@class='sign_in-exit']"));
-            closePopUp.Click();
-
-            //Find search line
-            var searchLine = Driver.FindElement(By.CssSelector("[placeholder = 'Search']"));
+            //Find search
+            var searchLine = Driver.FindElement(By.CssSelector("[name = 'q']"));
             searchLine.Click();
 
             //Write text
-            searchLine.SendKeys("What the");
+            searchLine.SendKeys("What the hell is going on.");
 
             //Click button for starting search
-            var searchButton = Driver.FindElement(By.CssSelector("#orb-search-button"));
-            searchButton.Click();
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+            try
+            {
+                wait.Until(elem => elem.FindElement(By.XPath("//span[contains(text(),'what the hell is going on')][1]"))).Click();               
+            }
+            catch (NoSuchElementException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             //Click first link
-            var clickFirstLink = Driver.FindElement(By.XPath("//a[@class='css-vh7bxp-PromoLink e1f5wbog6'][1]"));
-            clickFirstLink.Click();
+            WebDriverWait wait1 = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+            try
+            {
+                wait1.Until(elem => elem.FindElement(By.XPath("//h3/span[contains(text(),'what the')][1]"))).Click();
+                //firstLinkInSearchResult.Click();
+            }
+            catch (NoSuchElementException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
